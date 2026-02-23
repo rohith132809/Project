@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Secure Upload</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{box-sizing:border-box}
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:Inter,Segoe UI,sans-serif;
+    background:radial-gradient(circle at top,#020617,#000);
+    perspective:1400px;
+}
+
+/* ===== 3D CARD ===== */
+.scene{transform-style:preserve-3d}
+.card{
+    width:950px;
+    padding:40px;
+    border-radius:30px;
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(18px);
+    box-shadow:0 40px 80px rgba(0,0,0,.7);
+    transform-style:preserve-3d;
+    transition:transform .15s ease;
+    color:white;
+}
+
+/* ===== HEADER ===== */
+.header{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:30px;
+    transform:translateZ(40px);
+}
+.title{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    font-size:26px;
+    font-weight:600;
+}
+.title i{color:#818cf8}
+
+/* ===== GRID ===== */
+.grid{
+    display:grid;
+    grid-template-columns:1.2fr 1fr;
+    gap:40px;
+    transform-style:preserve-3d;
+}
+
+/* ===== UPLOAD AREA ===== */
+.upload{
+    transform:translateZ(30px);
+}
+.upload-box{
+    border:2px dashed rgba(129,140,248,.6);
+    border-radius:24px;
+    padding:36px;
+    background:linear-gradient(180deg,rgba(99,102,241,.18),rgba(0,0,0,.25));
+}
+.upload-box h3{
+    margin:0 0 10px;
+    font-size:22px;
+}
+.upload-box p{
+    margin:0;
+    opacity:.75;
+}
+.filename{
+    margin-top:14px;
+    opacity:.85;
+}
+
+/* ===== INPUT ===== */
+input[type=file]{
+    margin-top:18px;
+    width:100%;
+    color:white;
+}
+
+/* ===== BUTTON ===== */
+button{
+    width:100%;
+    margin-top:24px;
+    padding:16px;
+    border:none;
+    border-radius:16px;
+    font-size:16px;
+    font-weight:600;
+    cursor:pointer;
+    color:white;
+    background:linear-gradient(135deg,#6366f1,#818cf8);
+    box-shadow:0 10px 30px rgba(99,102,241,.6);
+}
+
+/* ===== FILE LIST ===== */
+.files{
+    transform:translateZ(25px);
+    background:rgba(0,0,0,.3);
+    border-radius:24px;
+    padding:26px;
+}
+.files h3{
+    margin-top:0;
+    font-size:20px;
+}
+.file{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:14px 18px;
+    border-radius:14px;
+    margin-bottom:12px;
+    background:rgba(255,255,255,.08);
+}
+.file a{
+    color:white;
+    text-decoration:none;
+}
+.delete{
+    color:#f87171;
+    font-size:18px;
+}
+
+/* ===== FOOTER ===== */
+.footer{
+    margin-top:28px;
+    transform:translateZ(20px);
+}
+.footer a{
+    color:#a5b4fc;
+    text-decoration:none;
+    font-weight:500;
+}
+</style>
+</head>
+
+<body>
+
+<div class="scene">
+<div class="card" id="card">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="title">
+            <i class="fa-solid fa-shield-halved"></i>
+            Secure Upload
+        </div>
+    </div>
+
+    <!-- GRID -->
+    <div class="grid">
+
+        <!-- UPLOAD -->
+        <div class="upload">
+            <form method="post" enctype="multipart/form-data">
+                <div class="upload-box">
+                    <h3>Select File</h3>
+                    <p>PDF • JPG • PNG • MP4 (Max 10MB)</p>
+
+                    <input type="file" name="file" required onchange="showName(this)">
+                    <div class="filename" id="fileName">No file selected</div>
+                </div>
+
+                <button type="submit">
+                    Upload Securely
+                </button>
+            </form>
+        </div>
+
+        <!-- FILES -->
+        <div class="files">
+            <h3>📁 Your Files</h3>
+
+            {% for f in files %}
+            <div class="file">
+                <a href="{{ url_for('media', filename=f) }}">{{ f }}</a>
+                <a class="delete" href="{{ url_for('delete_file', filename=f) }}">
+                    <i class="fa-solid fa-trash"></i>
+                </a>
+            </div>
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        <a href="{{ url_for('hidden_area') }}">
+            ← Back
+        </a>
+    </div>
+
+</div>
+</div>
+
+<script>
+const card=document.getElementById("card");
+document.addEventListener("mousemove",e=>{
+    const x=(window.innerWidth/2-e.clientX)/35;
+    const y=(window.innerHeight/2-e.clientY)/35;
+    card.style.transform=`rotateY(${x}deg) rotateX(${y}deg)`;
+});
+document.addEventListener("mouseleave",()=>{
+    card.style.transform="rotateY(0deg) rotateX(0deg)";
+});
+function showName(input){
+    if(input.files.length>0){
+        document.getElementById("fileName").innerText=input.files[0].name;
+    }
+}
+</script>
+
+</body>
+</html>

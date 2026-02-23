@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Welcome</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{box-sizing:border-box}
+body{
+    margin:0;
+    height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-family:Inter,Segoe UI,sans-serif;
+    background:radial-gradient(circle at top,#34d399,#065f46);
+    perspective:1400px;
+}
+
+.card{
+    width:460px;
+    padding:36px;
+    border-radius:28px;
+    background:rgba(255,255,255,0.15);
+    backdrop-filter:blur(18px);
+    box-shadow:0 40px 80px rgba(0,0,0,.5);
+    color:white;
+    text-align:center;
+    transform-style:preserve-3d;
+    transition:.15s ease;
+}
+
+.check{
+    font-size:56px;
+    color:#00ff9c;
+    margin-bottom:12px;
+    transform:translateZ(45px);
+}
+
+h2{
+    margin:8px 0;
+    transform:translateZ(30px);
+}
+.user{
+    opacity:.85;
+    margin-bottom:26px;
+    transform:translateZ(25px);
+}
+
+.actions{
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+    transform:translateZ(20px);
+}
+a.btn{
+    display:block;
+    padding:14px;
+    border-radius:14px;
+    text-decoration:none;
+    color:white;
+    font-weight:600;
+}
+.upload{background:#7289da}
+.logout{background:#ef4444}
+</style>
+</head>
+
+<body>
+
+<div class="card" id="card">
+
+    <div class="check">
+        <i class="fa-solid fa-circle-check"></i>
+    </div>
+
+    <h2>Welcome 🎉</h2>
+    <div class="user">
+        <i class="fa-solid fa-user"></i> {{ username }}
+    </div>
+
+    <div class="actions">
+        <a class="btn upload" href="{{ url_for('upload') }}">
+            <i class="fa-solid fa-cloud-arrow-up"></i> Upload Secure File
+        </a>
+
+        <a class="btn logout" href="{{ url_for('logout') }}">
+            <i class="fa-solid fa-right-from-bracket"></i> Logout
+        </a>
+    </div>
+
+</div>
+
+<script>
+const card=document.getElementById("card");
+document.addEventListener("mousemove",e=>{
+    const x=(window.innerWidth/2-e.clientX)/35;
+    const y=(window.innerHeight/2-e.clientY)/35;
+    card.style.transform=`rotateY(${x}deg) rotateX(${y}deg)`;
+});
+document.addEventListener("mouseleave",()=>{
+    card.style.transform="rotateY(0deg) rotateX(0deg)";
+});
+</script>
+
+</body>
+</html>
